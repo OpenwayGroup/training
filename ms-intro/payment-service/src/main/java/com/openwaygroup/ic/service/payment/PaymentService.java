@@ -2,6 +2,8 @@ package com.openwaygroup.ic.service.payment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -13,6 +15,8 @@ import java.util.Date;
 
 @Component
 public class PaymentService {
+
+    private final Logger logger = LogManager.getLogger(this.getClass());
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -40,10 +44,10 @@ public class PaymentService {
     private void sendMessage(Message<String> message) {
         try {
             kafkaTemplate.send(message).get();
+            logger.info("Send message: " + message.getPayload());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Failed to send message", e);
         }
-        System.out.println("Send message: " + message.getPayload());
     }
 
 }

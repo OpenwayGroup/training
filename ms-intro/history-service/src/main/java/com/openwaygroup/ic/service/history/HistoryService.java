@@ -2,6 +2,8 @@ package com.openwaygroup.ic.service.history;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openwaygroup.ic.service.payment.Payment;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -15,12 +17,14 @@ import java.util.UUID;
 @Component
 public class HistoryService {
 
+    private final Logger logger = LogManager.getLogger(this.getClass());
+
     @Autowired
     HistoryRepository historyRepository;
 
     @KafkaListener(topics = "payment-created")
     public void newPayment(@Payload String payload) throws IOException {
-        System.out.println("Receive message: " + payload);
+        logger.info("Receive message: " + payload);
 
         Payment payment = toPayment(payload);
 

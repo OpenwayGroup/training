@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" strict="true" monitorInterval="30">
+
+    <Properties>
+        <!--<Property name="defaultpattern">logdate=(%d{ISO8601}) thread=(%thread)) level=(%level) loggerclass=(%logger{36}) message=(%msg)%n</Property>-->
+        <Property name="defaultpattern">%d %-5p [%t] %c{10} - %m%n</Property>
+        <Property name="socket.host">${bundle:application:logstash.host}</Property>
+        <Property name="socket.port">${bundle:application:logstash.port}</Property>
+    </Properties>
+    <Filter type="ThresholdFilter" level="trace"/>
+
+    <Appenders>
+        <Appender type="Console" name="STDOUT">
+            <Layout type="PatternLayout" pattern="${defaultpattern}"/>
+        </Appender>
+        <Socket name="Logstash" host="${socket.host}" port="${socket.port}">
+            <Layout type="PatternLayout" pattern="${defaultpattern}"/>
+        </Socket>
+        <Async name="LogstashAsync" bufferSize="204800">
+            <AppenderRef ref="Logstash"/>
+        </Async>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.openwaygroup.ic" level="debug" additivity="false">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="LogstashAsync"/>
+        </Logger>
+        <Root level="warn">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="LogstashAsync"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
