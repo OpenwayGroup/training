@@ -69,6 +69,16 @@
                 <artifactId>jackson-databind</artifactId>
                 <version>2.9.4</version>
             </dependency>
+            <dependency>
+                <groupId>io.opentracing.contrib</groupId>
+                <artifactId>opentracing-spring-web-autoconfigure</artifactId>
+                <version>0.3.2</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jaegertracing</groupId>
+                <artifactId>jaeger-client</artifactId>
+                <version>0.32.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
