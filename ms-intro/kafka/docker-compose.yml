@@ -1,0 +1,45 @@
+version: '3'
+networks:
+  ms-intro:
+    external: true
+
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    networks:
+      - ms-intro
+    ports:
+     - 2181:2181
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    networks:
+      - ms-intro
+    ports:
+     - "9092:9092"
+    depends_on:
+      - zookeeper
+    links:
+      - zookeeper:zookeeper
+    environment:
+     KAFKA_ADVERTISED_HOST_NAME: kafka
+     KAFKA_ADVERTISED_PORT: 9092
+     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+  kafka-manager:
+    image: sheepkiller/kafka-manager:latest
+    container_name: kafka-manager
+    networks:
+      - ms-intro
+    ports:
+     - 9000:9000
+    links:
+     - zookeeper
+     - kafka
+    environment:
+     ZK_HOSTS: zookeeper:2181
+     APPLICATION_SECRET: letmein
+     KM_ARGS: -Djava.net.preferIPv4Stack=true
+     KM_CONFIG: /opt/my_shiny.conf
