@@ -9,7 +9,7 @@ public class TraceConfig {
 
     @Bean
     public Tracer jaegerTracer() {
-        io.jaegertracing.Configuration configuration = new io.jaegertracing.Configuration("paymentService");
+        io.jaegertracing.Configuration configuration = io.jaegertracing.Configuration.fromEnv();
         return configuration
                 .getTracerBuilder()
                 .build();

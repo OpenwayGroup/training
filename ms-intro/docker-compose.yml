@@ -1,0 +1,43 @@
+version: '3'
+networks:
+  ms-intro:
+    external: true
+
+services:
+  payment-service:
+    container_name: payment-service
+    image: payment-service:latest
+    networks:
+      - ms-intro
+    ports:
+      - 8080:8080
+    environment:
+      server.port: 8080
+      spring.kafka.bootstrap-servers: kafka:9092
+      logstash.host: logstash
+      logstash.port: 5000
+      JAEGER_SERVICE_NAME: paymentService
+      JAEGER_SAMPLER_MANAGER_HOST_PORT: jaeger:5778
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_AGENT_PORT: 6831
+
+  history-service:
+    container_name: history-service
+    image: history-service:latest
+    networks:
+      - ms-intro
+    ports:
+      - 8090:8090
+    environment:
+      server.port: 8090
+      spring.kafka.consumer.group-id: history-service
+      spring.kafka.bootstrap-servers: kafka:9092
+      spring.data.mongodb.host: mongodb
+      spring.data.mongodb.port: 27017
+      spring.data.mongodb.database: history
+      logstash.host: logstash
+      logstash.port: 5000
+      JAEGER_SERVICE_NAME: historyService
+      JAEGER_SAMPLER_MANAGER_HOST_PORT: jaeger:5778
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_AGENT_PORT: 6831

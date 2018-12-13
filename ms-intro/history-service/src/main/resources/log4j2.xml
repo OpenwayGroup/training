@@ -4,8 +4,8 @@
     <Properties>
         <!--<Property name="defaultpattern">logdate=(%d{ISO8601}) thread=(%thread)) level=(%level) loggerclass=(%logger{36}) message=(%msg)%n</Property>-->
         <Property name="defaultpattern">%d %-5p [%t] %c{10} - %m%n</Property>
-        <Property name="socket.host">${bundle:application:logstash.host}</Property>
-        <Property name="socket.port">${bundle:application:logstash.port}</Property>
+        <Property name="socket.host">${env:logstash.host:-${bundle:application:logstash.host}}</Property>
+        <Property name="socket.port">${env:logstash.port:-${bundle:application:logstash.port}}</Property>
     </Properties>
     <Filter type="ThresholdFilter" level="trace"/>
 
